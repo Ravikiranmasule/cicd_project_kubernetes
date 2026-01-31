@@ -16,24 +16,22 @@ pipeline {
 
     stages {
         stage('0. Pre-Flight & Gitleaks Scan') {
-            steps {
-                script {
-                    echo "Checking if DefectDojo is alive..."
-                    sh "curl -s --connect-timeout 5 ${DEFECTDOJO_URL}/api/v2/health_check/ || echo 'Warning: Dojo unreachable'"
-                }
-                echo "Running Gitleaks to check for exposed secrets..."
-                // Adding Gitleaks makes your project stand out from 'normal' ones
-                sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks:latest detect --source /path --report-format json --report-path /path/gitleaks-report.json || true'
-                
-                echo "Cleaning environment..."
-                sh 'docker image prune -f' 
-                sh 'sudo chmod -R 777 ${WORKSPACE} || true'
-                checkout scm
-                
-                dir('security-tools') {
-                    sh 'docker-compose -f sonarqube-compose.yml up -d'
-                }
-            }
+    steps {
+        // Move checkout to the TOP
+        checkout scm 
+        
+        script {
+            sh "curl -s --connect-timeout 5 ${DEFECTDOJO_URL}/api/v2/health_check/ || echo 'Warning: Dojo unreachable'"
+        }
+
+        echo "Running Gitleaks..."
+        // Now it will find the .git folder
+        sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks:latest detect --source /path --report-format json --report-path /path/gitleaks-report.json || true'
+        
+        dir('security-tools') {
+            sh 'docker-compose -f sonarqube-compose.yml up -d'
+        }
+    }
         }
 
         stage('1. Build Backend (JAR)') {
