@@ -14,19 +14,22 @@ pipeline {
     }
 
     stages {
-        stage('0. Pre-Flight & Tooling') {
+       stage('0. Pre-Flight & Tooling') {
             steps {
                 checkout scm 
+                
+                // ADD THIS LINE: Clean up old containers to avoid conflicts
+                sh 'docker rm -f sonar-postgres sonarqube prometheus grafana blackbox-exporter || true'
+                
                 script {
                     sh "curl -s --connect-timeout 5 ${DEFECTDOJO_URL}/api/v2/health_check/ || echo 'Warning: Dojo unreachable'"
                 }
-                echo "Running Gitleaks..."
-                sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks:latest detect --source /path --report-format json --report-path /path/gitleaks-report.json || true'
                 
-                // Hybrid Logic: Run Security & Monitoring on Docker Agent EC2
                 dir('security-tools') {
                     sh 'docker-compose -f sonarqube-compose.yml up -d'
                 }
+                
+                // Start monitoring tools
                 sh 'docker-compose up -d prometheus grafana blackbox-exporter'
             }
         }
