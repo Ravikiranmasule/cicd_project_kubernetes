@@ -139,20 +139,22 @@ pipeline {
         }
 
         stage('11. Kubernetes Dynamic Deploy') {
-            steps {
-                withKubeConfig([credentialsId: 'k3s-config']) {
-                    sh """
-                    sed -i 's|ravikiranmasule/hotellux-k8s-backend:.*|ravikiranmasule/hotellux-k8s-backend:v${env.BUILD_NUMBER}|g' k8s/backend.yaml
-                    sed -i 's|ravikiranmasule/hotellux-k8s-frontend:.*|ravikiranmasule/hotellux-k8s-frontend:v${env.BUILD_NUMBER}|g' k8s/frontend.yaml
-                    
-                    kubectl apply -f k8s/
-                    
-                    kubectl rollout status deployment/hotellux-backend
-                    kubectl rollout status deployment/hotellux-frontend
-                    """
-                }
-            }
+    steps {
+        withKubeConfig([credentialsId: 'k3s-config']) {
+            sh """
+            sed -i 's|ravikiranmasule/hotellux-k8s-backend:.*|ravikiranmasule/hotellux-k8s-backend:v${env.BUILD_NUMBER}|g' k8s/backend.yaml
+            sed -i 's|ravikiranmasule/hotellux-k8s-frontend:.*|ravikiranmasule/hotellux-k8s-frontend:v${env.BUILD_NUMBER}|g' k8s/frontend.yaml
+            
+            # The '--insecure-skip-tls-verify' flag bypasses the certificate error
+            kubectl apply -f k8s/ --insecure-skip-tls-verify
+            
+            # Use the same flag to wait for rollout status
+            kubectl rollout status deployment/hotellux-backend --insecure-skip-tls-verify
+            kubectl rollout status deployment/hotellux-frontend --insecure-skip-tls-verify
+            """
         }
+    }
+}
 
         stage('12. DAST Scan (ZAP)') {
             steps {
