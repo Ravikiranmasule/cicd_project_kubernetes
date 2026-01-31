@@ -9,23 +9,26 @@ pipeline {
     environment {
         SCANNER_HOME = tool 'SonarScanner' 
         DEFECTDOJO_URL = 'http://52.71.8.63:8080' 
-        // Use your Worker Node IP and NodePort for the ZAP scan
         APP_URL = 'http://18.215.15.53:30080' 
         DOCKERHUB_USER = 'ravikiranmasule' 
     }
 
     stages {
-       stage('0. Pre-Flight & Tooling') {
+        stage('0. Pre-Flight & Tooling') {
             steps {
                 checkout scm 
-                // Start SonarQube on the Docker Agent EC2
+                script {
+                    sh "curl -s --connect-timeout 5 ${DEFECTDOJO_URL}/api/v2/health_check/ || echo 'Warning: Dojo unreachable'"
+                }
+                echo "Running Gitleaks..."
+                sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks:latest detect --source /path --report-format json --report-path /path/gitleaks-report.json || true'
+                
+                // Hybrid Logic: Run Security & Monitoring on Docker Agent EC2
                 dir('security-tools') {
                     sh 'docker-compose -f sonarqube-compose.yml up -d'
                 }
-                // Start Prometheus/Grafana on the Docker Agent EC2
                 sh 'docker-compose up -d prometheus grafana blackbox-exporter'
             }
-        }
         }
 
         stage('1. Build Backend (JAR)') {
@@ -105,7 +108,6 @@ pipeline {
                     sh """
                     echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
                     
-                    # Create new unique repositories for K8s
                     docker tag hotellux-app-build_backend:latest \$DOCKER_USER/hotellux-k8s-backend:v${env.BUILD_NUMBER}
                     docker tag hotellux-app-build_frontend:latest \$DOCKER_USER/hotellux-k8s-frontend:v${env.BUILD_NUMBER}
                     
@@ -120,7 +122,6 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DOJO_TOKEN')]) {
                     sh """
-                    # Create Engagement for current build
                     curl -X POST "${DEFECTDOJO_URL}/api/v2/engagements/" \
                          -H "Authorization: Token \$DOJO_TOKEN" \
                          -H "Content-Type: multipart/form-data" \
@@ -129,7 +130,6 @@ pipeline {
                          -F "target_end=\$(date -d '+1 day' +%Y-%m-%d)" \
                          -F "product=1" -F "status=In Progress" -F "engagement_type=CI/CD"
 
-                    # Upload Snyk/Trivy reports (ensure files exist)
                     [ -f trivy-fs-report.json ] && curl -X POST "${DEFECTDOJO_URL}/api/v2/import-scan/" -H "Authorization: Token \$DOJO_TOKEN" \
                          -F "active=true" -F "scan_type=Trivy Scan" -F "product_name=HotelLux" \
                          -F "engagement_name=K8s Build ${env.BUILD_NUMBER}" -F "file=@trivy-fs-report.json"
@@ -142,14 +142,11 @@ pipeline {
             steps {
                 withKubeConfig([credentialsId: 'k3s-config']) {
                     sh """
-                    # Dynamically update image tags in YAML files before deployment
                     sed -i 's|ravikiranmasule/hotellux-k8s-backend:.*|ravikiranmasule/hotellux-k8s-backend:v${env.BUILD_NUMBER}|g' k8s/backend.yaml
                     sed -i 's|ravikiranmasule/hotellux-k8s-frontend:.*|ravikiranmasule/hotellux-k8s-frontend:v${env.BUILD_NUMBER}|g' k8s/frontend.yaml
                     
-                    # Apply all manifests (Database, Backend, Frontend)
                     kubectl apply -f k8s/
                     
-                    # Wait for rollout to complete
                     kubectl rollout status deployment/hotellux-backend
                     kubectl rollout status deployment/hotellux-frontend
                     """
@@ -161,7 +158,6 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DOJO_TOKEN')]) {
                     sh """
-                    # Run ZAP against the Worker Node NodePort
                     docker run --user root --rm -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
                         -t ${APP_URL} -x zap-report.xml || true
                     
@@ -179,7 +175,7 @@ pipeline {
             cleanWs() 
             sh 'docker image prune -f' 
         }
-        success { echo "SUCCESS: HotelLux K8s Build #${env.BUILD_NUMBER} Deployed to 18.215.15.53" }
+        success { echo "SUCCESS: HotelLux K8s Build #${env.BUILD_NUMBER} Deployed!" }
         failure { echo "FAILURE: Build #${env.BUILD_NUMBER} failed." }
     }
 }
