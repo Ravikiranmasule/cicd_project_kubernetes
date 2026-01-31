@@ -15,24 +15,23 @@ pipeline {
 
     stages {
        stage('0. Pre-Flight & Tooling') {
-            steps {
-                checkout scm 
-                
-                // ADD THIS LINE: Clean up old containers to avoid conflicts
-                sh 'docker rm -f sonar-postgres sonarqube prometheus grafana blackbox-exporter || true'
-                
-                script {
-                    sh "curl -s --connect-timeout 5 ${DEFECTDOJO_URL}/api/v2/health_check/ || echo 'Warning: Dojo unreachable'"
-                }
-                
-                dir('security-tools') {
-                    sh 'docker-compose -f sonarqube-compose.yml up -d'
-                }
-                
-                // Start monitoring tools
-                sh 'docker-compose up -d prometheus grafana blackbox-exporter'
-            }
+    steps {
+        checkout scm 
+        
+        // The '|| true' at the end is CRITICAL to prevent the build from failing
+        sh 'docker rm -f sonar-postgres sonarqube prometheus grafana blackbox-exporter || true'
+        
+        script {
+            sh "curl -s --connect-timeout 5 ${DEFECTDOJO_URL}/api/v2/health_check/ || echo 'Warning: Dojo unreachable'"
         }
+        
+        dir('security-tools') {
+            sh 'docker-compose -f sonarqube-compose.yml up -d'
+        }
+        
+        sh 'docker-compose up -d prometheus grafana blackbox-exporter'
+    }
+}
 
         stage('1. Build Backend (JAR)') {
             steps {
