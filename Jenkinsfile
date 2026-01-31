@@ -15,23 +15,17 @@ pipeline {
     }
 
     stages {
-        stage('0. Pre-Flight & Gitleaks Scan') {
-    steps {
-        // Move checkout to the TOP
-        checkout scm 
-        
-        script {
-            sh "curl -s --connect-timeout 5 ${DEFECTDOJO_URL}/api/v2/health_check/ || echo 'Warning: Dojo unreachable'"
+       stage('0. Pre-Flight & Tooling') {
+            steps {
+                checkout scm 
+                // Start SonarQube on the Docker Agent EC2
+                dir('security-tools') {
+                    sh 'docker-compose -f sonarqube-compose.yml up -d'
+                }
+                // Start Prometheus/Grafana on the Docker Agent EC2
+                sh 'docker-compose up -d prometheus grafana blackbox-exporter'
+            }
         }
-
-        echo "Running Gitleaks..."
-        // Now it will find the .git folder
-        sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks:latest detect --source /path --report-format json --report-path /path/gitleaks-report.json || true'
-        
-        dir('security-tools') {
-            sh 'docker-compose -f sonarqube-compose.yml up -d'
-        }
-    }
         }
 
         stage('1. Build Backend (JAR)') {
