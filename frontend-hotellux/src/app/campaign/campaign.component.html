@@ -1,0 +1,15 @@
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Marketing Campaigns</h1>
+    <div *ngIf="campaigns.length > 0">
+      <ul class="list-group">
+        <li *ngFor="let campaign of campaigns" class="list-group-item">
+          {{ campaign.title }} ({{ campaign.startDate | date }} - {{ campaign.endDate | date }})
+          <a class="btn btn-info btn-sm float-right" [routerLink]="['/crm/campaigns', campaign.id]">Details</a>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="campaigns.length === 0">
+      <p>No campaigns found.</p>
+    </div>
+  </div>
+  

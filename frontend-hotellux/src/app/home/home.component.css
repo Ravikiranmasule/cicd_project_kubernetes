@@ -1,0 +1,41 @@
+/* home.component.css */
+
+/* Ensure the jumbotron takes full width on smaller screens */
+.jumbotron {
+    background-color: #f8f9fa;
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    border-radius: 0.3rem;
+  }
+  
+  .jumbotron h1 {
+    font-size: 2.5rem;
+  }
+  
+  .jumbotron p {
+    font-size: 1.25rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .jumbotron {
+      padding: 1rem;
+    }
+  
+    .jumbotron h1 {
+      font-size: 2rem;
+    }
+  
+    .jumbotron p {
+      font-size: 1rem;
+    }
+  }
+  
+  footer {
+    background-color: #343a40;
+  }
+  
+  footer p {
+    margin: 0;
+  }
+  

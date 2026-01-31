@@ -1,0 +1,50 @@
+<!-- src/app/registerroom/registerroom.component.html -->
+<div class="container mt-4">
+  <h2 class="text-center">{{ isEditMode ? 'Edit Room' : 'Create Room' }}</h2>
+  <form (ngSubmit)="saveRoom()">
+    <!-- Existing fields -->
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" class="form-control" [(ngModel)]="room.name" name="name" required />
+    </div>
+    <div class="form-group">
+      <label for="category">Category</label>
+      <input type="text" id="category" class="form-control" [(ngModel)]="room.category" name="category" required />
+    </div>
+    <div class="form-group">
+      <label for="amenities">Amenities</label>
+      <input type="text" id="amenities" class="form-control" [(ngModel)]="room.amenities" name="amenities" required />
+    </div>
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="number" id="price" class="form-control" [(ngModel)]="room.price" name="price" required />
+    </div>
+    <!-- New fields -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input type="text" id="description" class="form-control" [(ngModel)]="room.description" name="description" />
+    </div>
+    <div class="form-group">
+      <label for="capacity">Capacity</label>
+      <input type="number" id="capacity" class="form-control" [(ngModel)]="room.capacity" name="capacity" />
+    </div>
+    <div class="form-group">
+      <label for="bedType">Bed Type</label>
+      <input type="text" id="bedType" class="form-control" [(ngModel)]="room.bedType" name="bedType" />
+    </div>
+    <div class="form-group">
+      <label for="isAvailable">Is Available</label>
+      <input type="checkbox" id="isAvailable" class="form-check-input" [(ngModel)]="room.isAvailable" name="isAvailable" />
+    </div>
+    <div class="form-group">
+      <label for="rating">Rating</label>
+      <input type="number" id="rating" class="form-control" [(ngModel)]="room.rating" name="rating" />
+    </div>
+    <div class="form-group">
+      <label for="view">View</label>
+      <input type="text" id="view" class="form-control" [(ngModel)]="room.view" name="view" />
+    </div>
+    <button type="submit" class="btn btn-success">{{ isEditMode ? 'Update' : 'Create' }}</button>
+    <button class="btn btn-secondary" routerLink="/rooms">Cancel</button>
+  </form>
+</div>

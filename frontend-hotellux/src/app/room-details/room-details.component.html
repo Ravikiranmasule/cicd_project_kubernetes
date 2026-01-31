@@ -1,0 +1,44 @@
+<!-- src/app/room-details/room-details.component.html -->
+<div *ngIf="room">
+  <h2>{{ room.name }} Details</h2>
+  <div>
+    <label>Category: </label>
+    <span>{{ room.category }}</span>
+  </div>
+  <div>
+    <label>Amenities: </label>
+    <span>{{ room.amenities }}</span>
+  </div>
+  <div>
+    <label>Price: </label>
+    <span>\${{ room.price }}</span>
+  </div>
+  <div>
+    <label>Description: </label>
+    <span>{{ room.description }}</span>
+  </div>
+  <div>
+    <label>Capacity: </label>
+    <span>{{ room.capacity }}</span>
+  </div>
+  <div>
+    <label>Bed Type: </label>
+    <span>{{ room.bedType }}</span>
+  </div>
+  <div>
+    <label>Available: </label>
+    <span>{{ room.isAvailable ? 'Yes' : 'No' }}</span>
+  </div>
+  <div>
+    <label>Rating: </label>
+    <span>{{ room.rating }}</span>
+  </div>
+  <div>
+    <label>View: </label>
+    <span>{{ room.view }}</span>
+  </div>
+</div>
+
+<div *ngIf="!room">
+  <p>Room not found.</p>
+</div>

@@ -1,0 +1,17 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+  }
+  
+  .jumbotron {
+    background-color: #ffffff;
+    padding: 2rem;
+    margin-top: 2rem;
+    border-radius: 0.5rem;
+  }
+  
+  .navbar {
+    margin-bottom: 1rem;
+  }
+  

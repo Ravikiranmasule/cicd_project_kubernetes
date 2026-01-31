@@ -1,0 +1,30 @@
+<!-- inventory-item-edit.component.html -->
+<h2>Edit Inventory Item</h2>
+<form (ngSubmit)="update()">
+  <label for="itemName">Item Name:</label>
+  <input type="text" id="itemName" [(ngModel)]="item.itemName" name="itemName" required>
+
+  <label for="quantity">Quantity:</label>
+  <input type="number" id="quantity" [(ngModel)]="item.quantity" name="quantity" required>
+
+  <label for="supplier">Supplier:</label>
+  <select id="supplier" [(ngModel)]="item.supplier_id" name="supplierId" required>
+    <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+      {{ supplier.name }}
+    </option>
+  </select>
+
+  <label for="lastOrdered">Last Ordered:</label>
+  <input type="date" id="lastOrdered" [(ngModel)]="item.lastOrdered" name="lastOrdered">
+
+  <label for="nextOrderDate">Next Order Date:</label>
+  <input type="date" id="nextOrderDate" [(ngModel)]="item.nextOrderDate" name="nextOrderDate" required>
+
+  <label for="unitPrice">Unit Price:</label>
+  <input type="number" id="unitPrice" [(ngModel)]="item.unitPrice" name="unitPrice" required>
+
+  <label for="itemCategory">Item Category:</label>
+  <input type="text" id="itemCategory" [(ngModel)]="item.itemCategory" name="itemCategory" required>
+
+  <button type="submit">Update</button>
+</form>

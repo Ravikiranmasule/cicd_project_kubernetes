@@ -1,0 +1,51 @@
+<!-- src/app/room-edit/room-edit.component.html -->
+<div *ngIf="room">
+  <h2>Edit Room: {{ room.name }}</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" [(ngModel)]="room.name" name="name" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="category">Category</label>
+      <input type="text" id="category" [(ngModel)]="room.category" name="category" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="amenities">Amenities</label>
+      <input type="text" id="amenities" [(ngModel)]="room.amenities" name="amenities" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="number" id="price" [(ngModel)]="room.price" name="price" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input type="text" id="description" [(ngModel)]="room.description" name="description" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="capacity">Capacity</label>
+      <input type="number" id="capacity" [(ngModel)]="room.capacity" name="capacity" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="bedType">Bed Type</label>
+      <input type="text" id="bedType" [(ngModel)]="room.bedType" name="bedType" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="isAvailable">Is Available</label>
+      <input type="checkbox" id="isAvailable" [(ngModel)]="room.isAvailable" name="isAvailable" class="form-check-input" />
+    </div>
+    <div class="form-group">
+      <label for="rating">Rating</label>
+      <input type="number" id="rating" [(ngModel)]="room.rating" name="rating" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="view">View</label>
+      <input type="text" id="view" [(ngModel)]="room.view" name="view" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+</div>
+
+<div *ngIf="!room">
+  <p>Room not found.</p>
+</div>

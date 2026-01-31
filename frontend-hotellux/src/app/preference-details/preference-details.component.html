@@ -1,0 +1,11 @@
+<div class="container mt-4" *ngIf="preference">
+    <h1 class="text-center mb-4">Preference Details</h1>
+    <dl class="row">
+      <dt class="col-sm-3">Key</dt>
+      <dd class="col-sm-9">{{ preference.key }}</dd>
+      <dt class="col-sm-3">Value</dt>
+      <dd class="col-sm-9">{{ preference.value }}</dd>
+    </dl>
+    <a class="btn btn-primary" [routerLink]="['/crm/customers', customerId, 'preferences', preference.id, 'edit']">Edit</a>
+  </div>
+  

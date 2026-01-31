@@ -1,0 +1,27 @@
+<div *ngIf="booking">
+  <h2>Booking Details</h2>
+  <div>
+    <label>Room ID: </label>
+    <span>{{ booking.room.id }}</span>
+  </div>
+  <div>
+    <label>Check-In Date: </label>
+    <span>{{ booking.checkInDate | date }}</span>
+  </div>
+  <div>
+    <label>Check-Out Date: </label>
+    <span>{{ booking.checkOutDate | date }}</span>
+  </div>
+  <div>
+    <label>Guest Name: </label>
+    <span>{{ booking.guestName }}</span>
+  </div>
+  <div>
+    <label>Special Requests: </label>
+    <span>{{ booking.specialRequests }}</span>
+  </div>
+</div>
+
+<div *ngIf="!booking">
+  <p>Booking not found.</p>
+</div>

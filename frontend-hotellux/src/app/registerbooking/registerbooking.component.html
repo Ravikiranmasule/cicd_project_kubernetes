@@ -1,0 +1,30 @@
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Register New Booking</h1>
+  <form (ngSubmit)="registerBooking()" #bookingForm="ngForm">
+    <div class="form-group">
+      <label for="roomId">Room</label>
+      <select id="roomId" class="form-control" [(ngModel)]="booking.room.id" name="roomId" required>
+        <option *ngFor="let room of rooms" [value]="room.id">
+          {{ room.name }} - {{ room.category }} ({{ room.price | currency }})
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="checkInDate">Check-In Date</label>
+      <input type="date" id="checkInDate" class="form-control" [(ngModel)]="booking.checkInDate" name="checkInDate" required>
+    </div>
+    <div class="form-group">
+      <label for="checkOutDate">Check-Out Date</label>
+      <input type="date" id="checkOutDate" class="form-control" [(ngModel)]="booking.checkOutDate" name="checkOutDate" required>
+    </div>
+    <div class="form-group">
+      <label for="guestName">Guest Name</label>
+      <input type="text" id="guestName" class="form-control" [(ngModel)]="booking.guestName" name="guestName" required>
+    </div>
+    <div class="form-group">
+      <label for="specialRequests">Special Requests</label>
+      <textarea id="specialRequests" class="form-control" [(ngModel)]="booking.specialRequests" name="specialRequests"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Register Booking</button>
+  </form>
+</div>

@@ -1,0 +1,12 @@
+<!-- inventory-item-details.component.html -->
+<h2>Inventory Item Details</h2>
+<div *ngIf="item">
+  <p><strong>ID:</strong> {{ item.id }}</p>
+  <p><strong>Item Name:</strong> {{ item.itemName }}</p>
+  <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+  <p><strong>Supplier:</strong> {{ item.supplier.name }}</p>
+  <p><strong>Last Ordered:</strong> {{ item.lastOrdered | date }}</p>
+  <p><strong>Next Order Date:</strong> {{ item.nextOrderDate | date }}</p>
+  <p><strong>Unit Price:</strong> {{ item.unitPrice | currency }}</p>
+  <p><strong>Item Category:</strong> {{ item.itemCategory }}</p>
+</div>

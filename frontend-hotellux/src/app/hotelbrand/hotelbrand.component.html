@@ -1,0 +1,27 @@
+<app-navbar></app-navbar>
+<div class="container mt-4">
+    <h1>Hotel Brands</h1>
+  
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let brand of hotelBrands">
+          <td>{{ brand.id }}</td>
+          <td>{{ brand.name }}</td>
+          <td>{{ brand.description }}</td>
+          <td>
+            <a class="btn btn-info btn-sm" (click)="editBrand(brand.id)">Edit</a>
+            <button class="btn btn-danger btn-sm" (click)="deleteBrand(brand.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

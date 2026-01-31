@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Hotel Details</h1>
+  
+    <div *ngIf="hotel">
+      <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">{{ hotel.id }}</dd>
+  
+        <dt class="col-sm-3">Hotel Name</dt>
+        <dd class="col-sm-9">{{ hotel.name }}</dd>
+  
+        <dt class="col-sm-3">Address</dt>
+        <dd class="col-sm-9">{{ hotel.address }}</dd>
+  
+        <dt class="col-sm-3">Star Rating</dt>
+        <dd class="col-sm-9">{{ hotel.starRating }}</dd>
+  
+        <dt class="col-sm-3">Chain</dt>
+        <dd class="col-sm-9">{{ hotel.chain.name }}</dd>
+  
+        <dt class="col-sm-3">Brand</dt>
+        <dd class="col-sm-9">{{ hotel.brand.name }}</dd>
+      </dl>
+  
+      <button class="btn btn-primary" (click)="goBack()">Back to List</button>
+    </div>
+  
+    <div *ngIf="!hotel" class="text-center">
+      <p>Loading...</p>
+    </div>
+  </div>
+  

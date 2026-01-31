@@ -1,0 +1,15 @@
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Edit Feedback</h1>
+    <form (ngSubmit)="save()">
+      <div class="form-group">
+        <label for="feedbackText">Feedback</label>
+        <textarea id="feedbackText" class="form-control" [(ngModel)]="feedback.feedbackText" name="feedbackText" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" class="form-control" [(ngModel)]="feedback.date" name="date" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+  

@@ -1,0 +1,15 @@
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Edit Preference</h1>
+    <form (ngSubmit)="save()">
+      <div class="form-group">
+        <label for="key">Key</label>
+        <input type="text" id="key" class="form-control" [(ngModel)]="preference.key" name="key" required>
+      </div>
+      <div class="form-group">
+        <label for="value">Value</label>
+        <input type="text" id="value" class="form-control" [(ngModel)]="preference.value" name="value" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+  

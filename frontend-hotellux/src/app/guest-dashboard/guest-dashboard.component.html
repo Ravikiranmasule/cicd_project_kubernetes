@@ -1,0 +1,372 @@
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" routerLink="/">Luxtavern</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+              <a class="nav-link" routerLink="/guest-dashboard">Guest Dashboard</a>
+          </li>
+      </ul>
+      <ul class="navbar-nav ml-auto" style="margin-left: auto;">
+          <li class="nav-item">
+              <button 
+                  class="btn btn-logout" 
+                  (click)="logout()" 
+                  style="
+                      background-color: transparent; 
+                      border: 2px solid red; 
+                      color: red; 
+                      padding: 8px 16px; 
+                      border-radius: 4px; 
+                      cursor: pointer; 
+                      font-size: 16px; 
+                      font-weight: bold; 
+                      transition: background-color 0.3s, color 0.3s;">
+                  Logout
+              </button>
+          </li>
+      </ul>
+  </div>
+</nav> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LuxTaven Hotel</title>
+  <style>
+      * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+      }
+
+      body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+      }
+
+      .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+      }
+
+      header {
+          background-color: #6099fa;
+          color: #fff;
+          padding: 1rem 0;
+      }
+
+      nav ul {
+          list-style-type: none;
+          display: flex;
+          justify-content: space-around;
+      }
+
+      nav ul li {
+          position: relative;
+      }
+
+      nav ul li a {
+          color: #fff;
+          text-decoration: none;
+          padding: 10px;
+          display: block;
+      }
+
+      nav ul li a:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .hero {
+          background-image: url('hotel-image.jpg');
+          background-size: cover;
+          background-position: center;
+          height: 400px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          color: #fff;
+      }
+
+      .hero h1 {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+      }
+
+      .content {
+          margin: 2rem 0;
+      }
+
+      .section-title {
+          margin: 2rem 0;
+          font-size: 2rem;
+          text-align: center;
+          color: #444;
+      }
+
+      .facilities {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+      }
+
+      .facility-card {
+          flex-basis: 30%;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          padding: 1rem;
+          margin-bottom: 2rem;
+          text-align: center;
+          background-color: #f9f9f9;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .facility-card img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 8px;
+      }
+
+      .facility-card h3 {
+          margin-top: 1rem;
+          font-size: 1.5rem;
+          color: #333;
+      }
+
+      .facility-card p {
+          margin-top: 0.5rem;
+          color: #666;
+      }
+
+      .about-section, .rooms-section, .facilities-section, .dining-section, .spa-section, .meeting-section, .location-section {
+          margin-bottom: 2rem;
+      }
+
+      footer {
+          background-color: #1a1a1a;
+          color: #fff;
+          text-align: center;
+          padding: 1rem 0;
+          margin-top: 2rem;
+      }
+
+      @media (max-width: 768px) {
+          .facilities {
+              flex-direction: column;
+          }
+
+          .facility-card {
+              flex-basis: 100%;
+          }
+      }
+  </style>
+</head>
+<body>
+  <header>
+      <div class="container">
+          <nav>
+              <ul>
+                  <li><a href="#home">Home</a></li>
+                  <li><a routerLink="/login">Login</a></li>
+                  <li><a routerLink="/guest-room-info">Rooms</a></li>
+                  <li><a routerLink="/guest-amenities">Amenities</a></li>
+                  <li><a routerLink="/guest-contactus">Contact</a></li>
+                
+                  <li *ngIf="isAuthenticated()" class="nav-item">
+                    <a  [routerLink]="getDashboardLink()">Dashboard</a>
+                  </li>
+                  <li><a routerLink="(click)=logout()">Logout</a></li>
+                  
+              </ul>
+          </nav>
+      </div>
+  </header>
+  
+  <div id="hero-carousel" class="carousel slide c-con" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#hero-carousels" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner ">
+      <div class="carousel-item active c-item">
+        <img src="\assets\images\luxtavernhotel3.jpg" class="d-block w-100 c-image" alt="...">
+        <div class="carousel-caption top-0 mt-4 ">
+          <h1 class=" c-text">Luxtavern</h1>
+          <p class="mt-5 fs-3 c-text1">Always Welcomed here !!.</p>
+        </div>
+      </div>
+      <div class="carousel-item c-item">
+        <img src="\assets\images\luxtavernhotel1.jpg" class="d-block w-100 c-image" alt="...">
+        <div class="carousel-caption top-0 mt-4 ">
+          <h1 class="\ c-text">Luxtavern</h1>
+          <p class="mt-5 fs-3 c-text1">Always Welcomed here !!.</p>
+        </div>
+      </div>
+      <div class="carousel-item c-item">
+        <img src="\assets\images\luxtavernhotel2.jpg" class="d-block w-100 c-image" alt="...">
+        <div class="carousel-caption top-0 mt-4 ">
+          <h1 class="\ c-text">Luxtavern</h1>
+          <p class="mt-5 fs-3 c-text1">Always Welcomed here !!.</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+ 
+  <!-- <section class="hero">
+      <div class="container">
+          <h1>Welcome to LuxTaven Hotel</h1>
+          <p>Experience luxury and comfort like never before</p>
+      </div>
+  </section> -->
+  
+  <main class="container">
+    <section class="about-section conten">
+        <div class="section-title">
+            <h1 >Welcome to LuxTaven Hotel &nbsp;&nbsp;!&nbsp;!</h1>
+            <p style="font-family: Verdana, Geneva, Tahoma, sans-serif;color:#f8cf18">Experience luxury and comfort like never before</p>
+        </div>
+    </section>
+      <section class="about-section content">
+          <h2 class="section-title">About LuxTaven</h2>
+          <p>LuxTaven Hotel is a premier destination for travelers seeking comfort, luxury, and exceptional service. Located in the heart of the city, we offer easy access to major attractions and business centers.</p>
+          <p>Our hotel features a variety of luxurious rooms, world-class dining, a state-of-the-art spa, and versatile meeting spaces, all designed to provide an unforgettable stay.</p>
+      </section>
+
+      <section class="rooms-section content">
+          <h2 class="section-title">Our Rooms</h2>
+          <div class="facilities">
+              <div class="facility-card">
+                  <img src="https://luxurycolumnist.com/wp-content/uploads/2022/11/Hotel-De-L-Europe-Amsterdam-interior.jpg" alt="Deluxe Room">
+                  <h3>Deluxe Room</h3>
+                  <p>Spacious room with a king-size bed and city view.</p>
+                  <p>Price: $200/night</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://i.pinimg.com/originals/0d/42/55/0d4255508689107748b8ec9fb1ae4f63.jpg" alt="Suite">
+                  <h3>Suite</h3>
+                  <p>Luxurious suite with separate living area and panoramic views.</p>
+                  <p>Price: $350/night</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/OIP.klesbOotCgyU60vLHJ5yYAHaED?rs=1&pid=ImgDetMain" alt="Presidential Suite">
+                  <h3>Presidential Suite</h3>
+                  <p>The ultimate in luxury, featuring multiple rooms and unparalleled views.</p>
+                  <p>Price: $800/night</p>
+              </div>
+          </div>
+      </section>
+
+      <section class="facilities-section content">
+          <h2 class="section-title">Hotel Facilities</h2>
+          <div class="facilities">
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/OIP.HUuvhmmAU3cik0e1yHFyKAHaFh?rs=1&pid=ImgDetMain" alt="Swimming Pool">
+                  <h3>Swimming Pool</h3>
+                  <p>Enjoy our heated indoor and outdoor swimming pools with stunning views.</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/OIP.GKBVCiM4BRrJUQq2SYUy5gHaE8?rs=1&pid=ImgDetMain" alt="Fitness Center">
+                  <h3>Fitness Center</h3>
+                  <p>Our fully equipped fitness center is open 24/7 for all your workout needs.</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/R.d9e2fdaab1be4bad6bce4c77acc336e8?rik=EiAZsthbt6IlYA&riu=http%3a%2f%2fwww.alphamarketing.com.mx%2fwp-content%2fuploads%2f2014%2f09%2fALPHA_BUSINESS_CENTER.jpg&ehk=YnCkq0I9zxJfx8QV4Ybh9XJjGhOwICfD8ucmAcmq8cY%3d&risl=&pid=ImgRaw&r=0" alt="Business Center">
+                  <h3>Business Center</h3>
+                  <p>Stay productive with our state-of-the-art business center, featuring private meeting rooms.</p>
+              </div>
+          </div>
+      </section>
+
+      <section class="dining-section content">
+          <h2 class="section-title">Dining</h2>
+          <div class="facilities">
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/OIP.xcxzPyhWBYu8ugeZJzbvTQHaDw?rs=1&pid=ImgDetMain" alt="Gourmet Restaurant">
+                  <h3>Gourmet Restaurant</h3>
+                  <p>Experience fine dining with a menu curated by world-renowned chefs.</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/R.ac872dfc2dd6aca0af7f4c19ab51bae8?rik=7xIQSqtiT0gS5Q&riu=http%3a%2f%2fleapphotography.com%2fblog%2fwp-content%2fuploads%2f2012%2f09%2freal-estate-photography-004-commercial-real-estate.jpg&ehk=CBiwr%2fLdmtgMcWR2Sw7ka0SUwGIvqFkYZnHaboLYLww%3d&risl=&pid=ImgRaw&r=0" alt="Café">
+                  <h3>Café</h3>
+                  <p>Relax and unwind with a selection of coffees, teas, and pastries.</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://offloadmedia.feverup.com/secretldn.com/wp-content/uploads/2021/04/30051837/The-Standard-Rooftop_Tim-Charles-2.jpg" alt="Rooftop Bar">
+                  <h3>Rooftop Bar</h3>
+                  <p>Enjoy cocktails and breathtaking views at our rooftop bar.</p>
+              </div>
+          </div>
+      </section>
+
+      <section class="spa-section content">
+          <h2 class="section-title">Spa & Wellness</h2>
+          <div class="facilities">
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/OIP.6tKSR5YEfiond9aLjbHbiAHaE1?rs=1&pid=ImgDetMain" alt="Luxury Spa">
+                  <h3>Luxury Spa</h3>
+                  <p>Indulge in a range of spa treatments and therapies designed to rejuvenate and relax.</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/OIP.rmjk8IdGIdG_AS3Gm1-k0QHaEK?rs=1&pid=ImgDetMain" alt="Sauna">
+                  <h3>Sauna & Steam Room</h3>
+                  <p>Unwind in our sauna and steam rooms, available for all guests.</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/OIP.F1Pexw1pMFuBY1965wwUygHaE7?rs=1&pid=ImgDetMain" alt="Yoga Classes">
+                  <h3>Yoga & Meditation</h3>
+                  <p>Join our daily yoga and meditation classes to enhance your well-being.</p>
+              </div>
+          </div>
+      </section>
+
+      <section class="meeting-section content">
+          <h2 class="section-title">Meetings & Events</h2>
+          <div class="facilities">
+              <div class="facility-card">
+                  <img src="https://i.pinimg.com/originals/cf/75/fa/cf75fa81c5e34835269620c9e08292b5.jpg" alt="Conference Hall">
+                  <h3>Conference Hall</h3>
+                  <p>Host large conferences or events in our state-of-the-art conference hall.</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/OIP.5uBhikl37i0J4LWrfiM_lAHaEK?rs=1&pid=ImgDetMain" alt="Meeting Room">
+                  <h3>Meeting Rooms</h3>
+                  <p>Our versatile meeting rooms are perfect for small to medium-sized gatherings.</p>
+              </div>
+              <div class="facility-card">
+                  <img src="https://th.bing.com/th/id/OIP.4rI4bEDovRf-oNC7gcmSWAHaE7?rs=1&pid=ImgDetMain" alt="Ballroom">
+                  <h3>Ballroom</h3>
+                  <p>Celebrate your special occasions in our grand ballroom, ideal for weddings and parties.</p>
+              </div>
+          </div>
+      </section>
+
+      <section class="location-section content">
+          <h2 class="section-title">Our Location</h2>
+          <p>Located in the heart of the city, LuxTaven Hotel offers easy access to major attractions, shopping, and business centers. Explore the vibrant city life right from our doorstep.</p>
+          <p>Our concierge team is always ready to assist with recommendations and arrangements for your city excursions.</p>
+      </section>
+  </main>
+
+  <footer>
+      <div class="container">
+          <p>&copy; 2024 LuxTaven Hotel. All rights reserved.</p>
+      </div>
+  </footer>
+</body>
+</html>

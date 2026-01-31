@@ -1,0 +1,22 @@
+<h2>Register Purchase Order</h2>
+<form (ngSubmit)="register()">
+  <div>
+    <label>Order Date:</label>
+    <input type="date" [(ngModel)]="purchaseOrder.orderDate" name="orderDate" required>
+  </div>
+  <div>
+    <label>Delivery Date:</label>
+    <input type="date" [(ngModel)]="purchaseOrder.deliveryDate" name="deliveryDate">
+  </div>
+  <div>
+    <label>Status:</label>
+    <input type="text" [(ngModel)]="purchaseOrder.status" name="status" required>
+  </div>
+  <!-- <div>
+    <label>Items:</label>
+    <select multiple [(ngModel)]="purchaseOrder.itemIds" name="items">
+      <option *ngFor="let item of inventoryItems" [ngValue]="item.id">{{item.itemName}}</option>
+    </select>
+  </div> -->
+  <button type="submit">Register</button>
+</form>

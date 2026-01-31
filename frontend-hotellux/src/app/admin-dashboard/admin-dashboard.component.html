@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Custom styles for responsiveness */
+    .navbar-toggler {
+      border-color: transparent;
+    }
+
+    .btn-logout {
+      background-color: transparent;
+      border: 2px solid red;
+      color: red;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn-logout:hover {
+      background-color: red;
+      color: white;
+    }
+
+    /* Custom responsive table styling */
+    @media (max-width: 768px) {
+      .table-responsive {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Admin Dashboard</h1>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Luxtavern</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/register">Register New User</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/staff-dash-board">Employees</a>
+          </li>
+        </ul>
+
+        <!-- <form class="d-flex ms-auto mb-2 mb-lg-0">
+          <input class="form-control me-2" type="search" placeholder="Search User" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form> -->
+
+        <form class="d-flex ms-auto mb-2 mb-lg-0" (ngSubmit)="searchUser()">
+          <input class="form-control me-2" [(ngModel)]="searchKeyword" name="searchKeyword" type="search" placeholder="Search User" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <button class="btn-logout" (click)="logout()">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Users Table -->
+    <div *ngIf="users.length > 0" class="table-responsive mt-4">
+      <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Username</th>
+            <th scope="col">Role</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <th scope="row">{{ user.id }}</th>
+            <td>{{ user.username }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              <button class="btn btn-info btn-sm" (click)="viewUserDetails(user.id!)">View</button>
+              <button class="btn btn-warning btn-sm" (click)="editUser(user.id!)">Edit</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteUser(user.id!)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Message for no users -->
+    <p *ngIf="users.length === 0" class="text-center text-muted mt-4">No users found. Click "Get All Users" to load
+      the users.</p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

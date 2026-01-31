@@ -1,0 +1,35 @@
+.c-image{
+    height:100%;
+    object-fit:cover;
+    filte:brighness(0.6)
+}
+.c-item{
+    height:480px
+}
+.c-con{
+    margin-top: 5%;
+}
+
+.c-text{
+    color: rgb(247, 44, 8);
+    border-color: rgb(224, 244, 7);
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    letter-spacing: 4px;
+    font-size: xx-large;
+    text-shadow: 2px 2px 5px rgb(243, 237, 247);
+    text-transform: uppercase;
+
+   
+}
+.c-text1{
+    color: rgb(28, 247, 8);
+    border-color: rgb(224, 244, 7);
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    height: max-content;
+    font-size: xx-large;
+    background-color: aliceblue;
+
+   
+}

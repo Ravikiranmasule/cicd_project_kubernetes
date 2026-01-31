@@ -1,0 +1,17 @@
+{
+  "apiBaseUrl": "http://52.200.182.38:9191/api",
+  "endpoints": {
+    "users": "/users",
+    "staff": "/staff",
+    "suppliers": "/inventory/suppliers",
+    "rooms": "/rooms",
+    "orders": "/inventory/orders",
+    "maintenance": "/maintenance",
+    "inventoryItems": "/inventory/items",
+    "hotelChains": "/hotel-chains",
+    "hotelBrands": "/hotel-brands",
+    "hotel": "/hotels",
+    "crm": "/crm",
+    "bookings": "/bookings"
+  }
+}

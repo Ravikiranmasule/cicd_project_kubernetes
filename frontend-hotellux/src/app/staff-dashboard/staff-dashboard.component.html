@@ -1,0 +1,75 @@
+<!-- src/app/staff-dashboard/staff-dashboard.component.html -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" routerLink="/">Luxtavern</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/register-room">Register</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto" style="margin-left: auto;">
+      <li class="nav-item">
+        <button 
+          class="btn btn-logout" 
+          (click)="logout()" 
+          style="
+            background-color: transparent; 
+            border: 2px solid red; 
+            color: red; 
+            padding: 8px 16px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold; 
+            transition: background-color 0.3s, color 0.3s;">
+          Logout
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h2 class="text-center">Room List</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Amenities</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Capacity</th>
+        <th>Bed Type</th>
+        <th>Available</th>
+        <th>Rating</th>
+        <th>View</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let room of rooms">
+        <td>{{ room.id }}</td>
+        <td>{{ room.name }}</td>
+        <td>{{ room.category }}</td>
+        <td>{{ room.amenities }}</td>
+        <td>{{ room.price }}</td>
+        <td>{{ room.description }}</td>
+        <td>{{ room.capacity }}</td>
+        <td>{{ room.bedType }}</td>
+        <td>{{ room.isAvailable ? 'Yes' : 'No' }}</td>
+        <td>{{ room.rating }}</td>
+        <td>{{ room.view }}</td>
+        <td>
+          <button class="btn btn-info btn-sm mr-2" [routerLink]="['/room-details', room.id]">View</button>
+          <button class="btn btn-warning" [routerLink]="['/room-edit', room.id]">Edit</button>
+          <button class="btn btn-danger" (click)="deleteRoom(room.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

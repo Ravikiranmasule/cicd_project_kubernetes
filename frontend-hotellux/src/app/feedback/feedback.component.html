@@ -1,0 +1,15 @@
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Customer Feedback</h1>
+    <div *ngIf="feedbacks.length > 0">
+      <ul class="list-group">
+        <li *ngFor="let feedback of feedbacks" class="list-group-item">
+          {{ feedback.feedbackText }} ({{ feedback.date | date }})
+          <a class="btn btn-info btn-sm float-right" [routerLink]="['/crm/customers', customerId, 'feedback', feedback.id]">Details</a>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="feedbacks.length === 0">
+      <p>No feedback found.</p>
+    </div>
+  </div>
+  

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Complete - Luxury Suite</title>
+    
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <h1>Luxury Suite</h1>
+            <nav class="nav">
+                <a >About</a>
+                <a >Gallery</a>
+                <a >Amenities</a>
+                <a >Reviews</a>
+                <a >Book Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- <section class="hero">
+        <div class="container">
+            <h2>Experience Ultimate Luxury</h2>
+            <p>Welcome to our exclusive luxury suite, where comfort meets elegance.</p>
+            <a href="#book" class="btn-primary">Book Your Stay</a>
+        </div>
+    </section> -->
+<style>/* General Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        color: #333;
+    }
+    
+    .container {
+        width: 85%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    /* Header Styles */
+    .header {
+        background-color: #333;
+        color: #fff;
+        padding: 15px 0;
+        text-align: center;
+    }
+    
+    .header h1 {
+        margin: 0;
+        font-size: 2rem;
+    }
+    
+    .nav {
+        margin-top: 10px;
+    }
+    
+    .nav a {
+        color: #fff;
+        margin: 0 10px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    
+    .nav a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Hero Section */
+    .hero {
+        background: url('hero.jpg') no-repeat center center/cover;
+        color: #fff;
+        padding: 100px 0;
+        text-align: center;
+    }
+    
+    .hero h2 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .hero p {
+        font-size: 1.25rem;
+        margin-bottom: 30px;
+    }
+    
+    .hero .btn-primary {
+        background-color: #28a745;
+        color: #fff;
+        padding: 15px 30px;
+        text-decoration: none;
+        font-size: 1.25rem;
+        border-radius: 5px;
+    }
+    
+    .hero .btn-primary:hover {
+        background-color: #218838;
+    }
+    
+    /* About Section */
+    .about {
+        padding: 60px 0;
+    }
+    
+    .about h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    
+    .about p {
+        font-size: 1.125rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .about ul {
+        list-style-type: disc;
+        padding-left: 40px;
+    }
+    
+    .about ul li {
+        font-size: 1.125rem;
+        margin-bottom: 10px;
+    }
+    
+    /* Gallery Section */
+    .gallery {
+        padding: 60px 0;
+    }
+    
+    .gallery h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .carousel {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        margin: 20px auto;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+    
+    .carousel-inner {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+    }
+    
+    .carousel-item {
+        min-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .carousel-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    
+    .carousel-control-prev, .carousel-control-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+    }
+    
+    .carousel-control-prev {
+        left: 10px;
+    }
+    
+    .carousel-control-next {
+        right: 10px;
+    }
+    
+    /* Amenities Section */
+    .amenities {
+        background-color: #f4f4f4;
+        padding: 60px 0;
+    }
+    
+    .amenities h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .amenities-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    
+    .amenity {
+        flex: 1;
+        min-width: 250px;
+        max-width: 45%;
+        background-color: #fff;
+        padding: 20px;
+        text-align: center;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .amenity img {
+        width: 50px;
+        margin-bottom: 10px;
+    }
+    
+    .amenity h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .amenity p {
+        font-size: 1rem;
+    }
+    
+    /* Reviews Section */
+    .reviews {
+        padding: 60px 0;
+        text-align: center;
+    }
+    
+    .reviews h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    
+    .review {
+        background-color: #fff;
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 5px;
+        max-width: 600px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .review p {
+        font-size: 1.125rem;
+        line-height: 1.6;
+    }
+    
+    /* Booking Section */
+    .book {
+        background-color: #f4f4f4;
+        padding: 60px 0;
+        text-align: center;
+    }
+    
+    .book h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    
+    .booking-form {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .booking-form label {
+        display: block;
+        font-size: 1rem;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    
+    .booking-form input {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    
+    .booking-form button {
+        background-color: #28a745;
+        color: #fff;
+        padding: 15px 20px;
+        font-size: 1.25rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .booking-form button:hover {
+        background-color: #218838;
+    }
+    
+    /* Footer Section */
+    .footer {
+        background-color: #333;
+        color: #fff;
+        padding: 20px 0;
+        text-align: center;
+    }
+    
+    .footer p {
+        margin: 0;
+        font-size: 0.875rem;
+    }
+    
+    .footer-nav {
+        margin-top: 10px;
+    }
+    
+    .footer-nav a {
+        color: #fff;
+        margin: 0 10px;
+        text-decoration: none;
+        font-size: 0.875rem;
+    }
+    
+    .footer-nav a:hover {
+        text-decoration: underline;
+    }
+    </style>
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About the Room</h2>
+            <p>This luxury suite offers a unique combination of comfort, style, and advanced technology. It is designed to make your stay unforgettable with its spacious layout, modern amenities, and stunning views.</p>
+            <ul>
+                <li>King-sized bed with premium bedding</li>
+                <li>Private balcony with city view</li>
+                <li>Large ensuite bathroom with jacuzzi</li>
+                <li>Complimentary high-speed Wi-Fi</li>
+                <li>55" flat-screen TV with streaming services</li>
+                <li>Personalized room service 24/7</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <h2>Room Gallery</h2>
+            <div id="hero-carousel" class="carousel slide c-con" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active c-item ">
+                        <img class="d-block w-100 c-image" src="https://th.bing.com/th/id/R.75519b51bf97c360c17fbc4013700de2?rik=C2JPCmyAvtk5Tw&riu=http%3a%2f%2fd2e5ushqwiltxm.cloudfront.net%2fwp-content%2fuploads%2fsites%2f86%2f2018%2f12%2f18031437%2fdeluxe-king-bed-room-cottage-at-pullman-danang-beach-resort-vietnam-5-star-hotel2.jpg&ehk=dQWN%2b%2fw3fg5I9ValhBZVUoO8nGGCjXw%2fGd9e2IfaCu0%3d&risl=&pid=ImgRaw&r=0" alt="Room View 1">
+                    </div>
+                    <div class="carousel-item c-item">
+                        <img class="d-block w-100 c-image" src="https://cache.marriott.com/marriottassets/marriott/DEDJW/dedjw-guestroom-0030-hor-clsc.jpg?interpolation=progressive-bilinear&" alt="Room View 2">
+                    </div>
+                    <div class="carousel-item c-item">
+                        <img class="d-block w-100 c-image"  src="https://www.athenaeumhotel.com/wp-content/uploads/2018/07/Park-View-Teal-room.jpg" alt="Room View 3">
+                    </div>
+                    <div class="carousel-item c-item">
+                        <img class="d-block w-100 c-image" src="https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/203/2019/10/28165013/fairmont-singapore-deluxe-room-king-south.jpg" alt="Room View 4">
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                      </button>
+                      <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                      </button>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <section id="amenities" class="amenities">
+        <div class="container">
+            <h2>Room Amenities</h2>
+            <div class="amenities-grid">
+                <div class="amenity">
+                    <img src="https://th.bing.com/th/id/OIP.LifA_Rc8_mzgyT1DVV0pWwHaEU?w=307&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Free Wi-Fi">
+                    <h3>Free Wi-Fi</h3>
+                    <p>Stay connected with complimentary high-speed internet access throughout your stay.</p>
+                </div>
+                <div class="amenity">
+                    <img src="https://th.bing.com/th/id/OIP.R42vUvO6zJ1RSH4lXfybXAHaHa?w=182&h=182&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Jacuzzi">
+                    <h3>Jacuzzi</h3>
+                    <p>Relax and unwind in your private jacuzzi, available in the ensuite bathroom.</p>
+                </div>
+                <div class="amenity">
+                    <img src="https://live.staticflickr.com/65535/49196342386_78cb710391_z.jpg" alt="Room Service">
+                    <h3>24/7 Room Service</h3>
+                    <p>Enjoy personalized room service any time of the day or night.</p>
+                </div>
+                <div class="amenity">
+                    <img src="https://cdn11.bigcommerce.com/s-ruxeh5dd/images/stencil/1280x1280/products/7856/283186/Spartan-TV-Lift-2__62308.1692167013.jpg?c=2" alt="Entertainment">
+                    <h3>55" TV with Streaming</h3>
+                    <p>Watch your favorite shows and movies on a large flat-screen TV with streaming services.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="reviews">
+        <div class="container">
+            <h2>Customer Reviews</h2>
+            <div class="review">
+                <p>"Absolutely loved my stay! The room was stunning, and the service was impeccable. Highly recommend!"</p>
+                <p><strong>- Sarah K.</strong></p>
+            </div>
+            <div class="review">
+                <p>"The luxury suite exceeded all my expectations. The views, amenities, and overall experience were top-notch."</p>
+                <p><strong>- John D.</strong></p>
+            </div>
+            <div class="review">
+                <p>"A perfect blend of comfort and luxury. The private jacuzzi and 24/7 room service made my stay unforgettable."</p>
+                <p><strong>- Emily R.</strong></p>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Luxtavern Hotel. All rights reserved.</p>
+            <nav class="footer-nav">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </nav>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!-- src/app/maintenance-register/maintenance-register.component.html -->
+
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Register New Request</h1>
+  <form (ngSubmit)="registerRequest()" #requestForm="ngForm">
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input type="text" id="description" class="form-control" [(ngModel)]="request.description" name="description" required>
+    </div>
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" class="form-control" [(ngModel)]="request.status" name="status" required>
+        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="room">Room</label>
+      <select id="room" class="form-control" [(ngModel)]="request.roomId" name="room" required>
+        <option *ngFor="let room of rooms" [value]="room.id">{{ room.name }} </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="reportedBy">Reported By</label>
+      <input type="text" id="reportedBy" class="form-control" [(ngModel)]="request.reportedBy" name="reportedBy">
+    </div>
+    <div class="form-group">
+      <label for="requestTime">Request Time</label>
+      <input type="datetime-local" id="requestTime" class="form-control" [ngModel]="request.requestTime ? (request.requestTime | date:'yyyy-MM-ddTHH:mm') : ''" (ngModelChange)="onRequestTimeChange($event)" name="requestTime" required>
+    </div>
+    <div class="form-group">
+      <label for="completionTime">Completion Time</label>
+      <input type="datetime-local" id="completionTime" class="form-control" [ngModel]="request.completionTime ? (request.completionTime | date:'yyyy-MM-ddTHH:mm') : ''" (ngModelChange)="onCompletionTimeChange($event)" name="completionTime">
+    </div>
+    <div class="form-group">
+      <label for="technicianAssigned">Technician Assigned</label>
+      <select id="technicianAssigned" class="form-control" [(ngModel)]="request.technicianAssignedId" name="technicianAssigned">
+        <option *ngFor="let tech of technicians" [value]="tech.id">{{ tech.name }} ({{ tech.position }})</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="notes">Notes</label>
+      <textarea id="notes" class="form-control" [(ngModel)]="request.notes" name="notes"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="priority">Priority</label>
+      <select id="priority" class="form-control" [(ngModel)]="request.priority" name="priority">
+        <option *ngFor="let priority of priorities" [value]="priority">{{ priority }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="createdAt">Created At</label>
+      <input type="datetime-local" id="createdAt" class="form-control" [ngModel]="request.createdAt ? (request.createdAt | date:'yyyy-MM-ddTHH:mm') : ''" (ngModelChange)="onCreatedAtChange($event)" name="createdAt" required>
+    </div>
+    <div class="form-group">
+      <label for="updatedAt">Updated At</label>
+      <input type="datetime-local" id="updatedAt" class="form-control" [ngModel]="request.updatedAt ? (request.updatedAt | date:'yyyy-MM-ddTHH:mm') : ''" (ngModelChange)="onUpdatedAtChange($event)" name="updatedAt" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Register Request</button>
+  </form>
+</div>

@@ -1,0 +1,24 @@
+<h2>Purchase Order Dashboard</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Order Date</th>
+      <th>Delivery Date</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of purchaseOrders">
+      <td>{{ order.id }}</td>
+      <td>{{ order.orderDate | date }}</td>
+      <td>{{ order.deliveryDate | date }}</td>
+      <td>{{ order.status }}</td>
+      <td>
+        <a [routerLink]="['/purchase-order-edit', order.id]">Edit</a> |
+        <a [routerLink]="['/purchase-order-details', order.id]">Details</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

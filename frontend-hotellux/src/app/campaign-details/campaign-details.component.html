@@ -1,0 +1,15 @@
+<div class="container mt-4" *ngIf="campaign">
+    <h1 class="text-center mb-4">Campaign Details</h1>
+    <dl class="row">
+      <dt class="col-sm-3">Title</dt>
+      <dd class="col-sm-9">{{ campaign.title }}</dd>
+      <dt class="col-sm-3">Description</dt>
+      <dd class="col-sm-9">{{ campaign.description }}</dd>
+      <dt class="col-sm-3">Start Date</dt>
+      <dd class="col-sm-9">{{ campaign.startDate | date }}</dd>
+      <dt class="col-sm-3">End Date</dt>
+      <dd class="col-sm-9">{{ campaign.endDate | date }}</dd>
+    </dl>
+    <a class="btn btn-primary" [routerLink]="['/crm/campaigns', campaign.id, 'edit']">Edit</a>
+  </div>
+  

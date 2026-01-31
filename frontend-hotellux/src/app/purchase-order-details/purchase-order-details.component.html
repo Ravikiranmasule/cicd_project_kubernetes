@@ -1,0 +1,15 @@
+<div *ngIf="purchaseOrder">
+    <h2>Purchase Order Details</h2>
+    <p><strong>ID:</strong> {{ purchaseOrder.id }}</p>
+    <p><strong>Order Date:</strong> {{ purchaseOrder.orderDate | date }}</p>
+    <p><strong>Delivery Date:</strong> {{ purchaseOrder.deliveryDate | date }}</p>
+    <p><strong>Status:</strong> {{ purchaseOrder.status }}</p>
+    <p><strong>Items:</strong></p>
+    <ul>
+      <li *ngFor="let item of purchaseOrder.items">
+        {{ item.itemName }} - {{ item.quantity }}
+      </li>
+    </ul>
+   
+  </div>
+  

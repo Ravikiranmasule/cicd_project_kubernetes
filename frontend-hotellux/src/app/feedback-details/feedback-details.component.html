@@ -1,0 +1,11 @@
+<div class="container mt-4" *ngIf="feedback">
+    <h1 class="text-center mb-4">Feedback Details</h1>
+    <dl class="row">
+      <dt class="col-sm-3">Feedback</dt>
+      <dd class="col-sm-9">{{ feedback.feedbackText }}</dd>
+      <dt class="col-sm-3">Date</dt>
+      <dd class="col-sm-9">{{ feedback.date | date }}</dd>
+    </dl>
+    <a class="btn btn-primary" [routerLink]="['/crm/customers', customerId, 'feedback', feedback.id, 'edit']">Edit</a>
+  </div>
+  

@@ -1,0 +1,16 @@
+<!-- src/app/staff-create/staff-create.component.html -->
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Create New Staff</h1>
+    <form (ngSubmit)="createStaff()" #staffForm="ngForm">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" class="form-control" [(ngModel)]="staff.name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="position">Position</label>
+        <input type="text" id="position" class="form-control" [(ngModel)]="staff.position" name="position">
+      </div>
+      <button type="submit" class="btn btn-primary">Create Staff</button>
+    </form>
+  </div>
+  

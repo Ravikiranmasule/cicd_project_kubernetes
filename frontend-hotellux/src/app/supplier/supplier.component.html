@@ -1,0 +1,25 @@
+<!-- supplier-list.component.html -->
+<h2>Suppliers</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Contact Info</th>
+      <th>Address</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let supplier of suppliers">
+      <td>{{ supplier.id }}</td>
+      <td>{{ supplier.name }}</td>
+      <td>{{ supplier.contactInfo }}</td>
+      <td>{{ supplier.address }}</td>
+      <td>
+        <a [routerLink]="['/supplier-details', supplier.id]">View</a> |
+        <a [routerLink]="['/supplier-edit', supplier.id]">Edit</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
