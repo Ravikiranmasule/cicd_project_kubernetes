@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: ravikiranmasule/hotellux-frontend:latest
+        image: ravikiranmasule/hotellux-k8s-frontend:v0
         ports:
         - containerPort: 80
 ---
