@@ -9,20 +9,23 @@ pipeline {
     environment {
         SCANNER_HOME = tool 'SonarScanner' 
         DEFECTDOJO_URL = 'http://52.71.8.63:8080' 
-        APP_URL = 'http://angular-frontend'
+        // Use your Worker Node IP and NodePort for the ZAP scan
+        APP_URL = 'http://18.215.15.53:30080' 
         DOCKERHUB_USER = 'ravikiranmasule' 
     }
 
     stages {
-        stage('0. Pre-Flight & Permission') {
+        stage('0. Pre-Flight & Gitleaks Scan') {
             steps {
                 script {
                     echo "Checking if DefectDojo is alive..."
                     sh "curl -s --connect-timeout 5 ${DEFECTDOJO_URL}/api/v2/health_check/ || echo 'Warning: Dojo unreachable'"
                 }
-                echo "Cleaning memory safely..."
-                sh 'sudo systemctl enable docker'
-                sh 'docker update --restart always $(docker ps -q) || true'
+                echo "Running Gitleaks to check for exposed secrets..."
+                // Adding Gitleaks makes your project stand out from 'normal' ones
+                sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks:latest detect --source /path --report-format json --report-path /path/gitleaks-report.json || true'
+                
+                echo "Cleaning environment..."
                 sh 'docker image prune -f' 
                 sh 'sudo chmod -R 777 ${WORKSPACE} || true'
                 checkout scm
@@ -58,8 +61,7 @@ pipeline {
                     -Dsonar.projectKey=HotelLux-Project \
                     -Dsonar.projectName=HotelLux \
                     -Dsonar.sources=. \
-                    -Dsonar.java.binaries=backend-hotellux/target/classes \
-                    -Dsonar.javascript.node.maxspace=1024
+                    -Dsonar.java.binaries=backend-hotellux/target/classes
                     """
                 }
             }
@@ -99,95 +101,81 @@ pipeline {
 
         stage('7. Trivy File System Scan') {
             steps {
-                sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/tmp aquasec/trivy fs --severity HIGH,CRITICAL --format json --output /tmp/trivy-fs-report.json /tmp'
+                sh 'docker run --rm -v $(pwd):/tmp aquasec/trivy fs --severity HIGH,CRITICAL --format json --output /tmp/trivy-fs-report.json /tmp'
             }
         }
 
-        stage('8. Trivy Image Scan') {
-            steps {
-                sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/tmp aquasec/trivy image --severity HIGH,CRITICAL --format json --output /tmp/trivy-report.json mysql:8.0'
-            }
-        }
-
-        stage('9. Push to DockerHub') {
+        stage('9. Push Unique K8s Images') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', 
                                  usernameVariable: 'DOCKER_USER', 
                                  passwordVariable: 'DOCKER_PASS')]) {
                     sh """
                     echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-                    docker tag hotellux-app-build_backend:latest \$DOCKER_USER/hotellux-backend:latest
-                    docker tag hotellux-app-build_frontend:latest \$DOCKER_USER/hotellux-frontend:latest
-                    docker push \$DOCKER_USER/hotellux-backend:latest
-                    docker push \$DOCKER_USER/hotellux-frontend:latest
+                    
+                    # Create new unique repositories for K8s
+                    docker tag hotellux-app-build_backend:latest \$DOCKER_USER/hotellux-k8s-backend:v${env.BUILD_NUMBER}
+                    docker tag hotellux-app-build_frontend:latest \$DOCKER_USER/hotellux-k8s-frontend:v${env.BUILD_NUMBER}
+                    
+                    docker push \$DOCKER_USER/hotellux-k8s-backend:v${env.BUILD_NUMBER}
+                    docker push \$DOCKER_USER/hotellux-k8s-frontend:v${env.BUILD_NUMBER}
                     """
                 }
             }
         }
 
-        stage('10. Create Engagement & Upload Reports') {
+        stage('10. DefectDojo Reporting') {
             steps {
                 withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DOJO_TOKEN')]) {
                     sh """
-                    # Create Engagement
+                    # Create Engagement for current build
                     curl -X POST "${DEFECTDOJO_URL}/api/v2/engagements/" \
                          -H "Authorization: Token \$DOJO_TOKEN" \
                          -H "Content-Type: multipart/form-data" \
-                         -F "name=CI/CD Build ${env.BUILD_NUMBER}" \
+                         -F "name=K8s Build ${env.BUILD_NUMBER}" \
                          -F "target_start=\$(date +%Y-%m-%d)" \
                          -F "target_end=\$(date -d '+1 day' +%Y-%m-%d)" \
                          -F "product=1" -F "status=In Progress" -F "engagement_type=CI/CD"
 
-                    # Upload Trivy
-                    curl -X POST "${DEFECTDOJO_URL}/api/v2/import-scan/" -H "Authorization: Token \$DOJO_TOKEN" \
+                    # Upload Snyk/Trivy reports (ensure files exist)
+                    [ -f trivy-fs-report.json ] && curl -X POST "${DEFECTDOJO_URL}/api/v2/import-scan/" -H "Authorization: Token \$DOJO_TOKEN" \
                          -F "active=true" -F "scan_type=Trivy Scan" -F "product_name=HotelLux" \
-                         -F "engagement_name=CI/CD Build ${env.BUILD_NUMBER}" -F "file=@trivy-report.json"
-
-                    if [ -f dependency-check-report.xml ]; then
-                        curl -X POST "${DEFECTDOJO_URL}/api/v2/import-scan/" -H "Authorization: Token \$DOJO_TOKEN" \
-                             -F "active=true" -F "scan_type=Dependency Check Scan" -F "product_name=HotelLux" \
-                             -F "engagement_name=CI/CD Build ${env.BUILD_NUMBER}" -F "file=@dependency-check-report.xml"
-                    else
-                        echo "Warning: dependency-check-report.xml not found. Skipping upload."
-                    fi
+                         -F "engagement_name=K8s Build ${env.BUILD_NUMBER}" -F "file=@trivy-fs-report.json"
                     """
                 }
             }
         }
 
-        stage('11. Kubernetes Deploy') {
+        stage('11. Kubernetes Dynamic Deploy') {
             steps {
-                // Use the 'Secret File' ID you created in Jenkins Master
                 withKubeConfig([credentialsId: 'k3s-config']) {
                     sh """
-                    # Apply all YAML files in your k8s folder
+                    # Dynamically update image tags in YAML files before deployment
+                    sed -i 's|ravikiranmasule/hotellux-k8s-backend:.*|ravikiranmasule/hotellux-k8s-backend:v${env.BUILD_NUMBER}|g' k8s/backend.yaml
+                    sed -i 's|ravikiranmasule/hotellux-k8s-frontend:.*|ravikiranmasule/hotellux-k8s-frontend:v${env.BUILD_NUMBER}|g' k8s/frontend.yaml
+                    
+                    # Apply all manifests (Database, Backend, Frontend)
                     kubectl apply -f k8s/
                     
-                    # Force the cluster to pull the 'latest' images you just pushed to DockerHub
-                    kubectl rollout restart deployment hotellux-backend
-                    kubectl rollout restart deployment hotellux-frontend
+                    # Wait for rollout to complete
+                    kubectl rollout status deployment/hotellux-backend
+                    kubectl rollout status deployment/hotellux-frontend
                     """
                 }
             }
         }
 
-        stage('12. Final Security Sync (ZAP & Sonar)') {
+        stage('12. DAST Scan (ZAP)') {
             steps {
                 withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DOJO_TOKEN')]) {
                     sh """
-                    # Update this URL to point to your Kubernetes Ingress or LoadBalancer if needed
-                    docker run --user root --network hotellux-app-build_hotel-network --rm -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+                    # Run ZAP against the Worker Node NodePort
+                    docker run --user root --rm -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
                         -t ${APP_URL} -x zap-report.xml || true
                     
-                    if [ -f zap-report.xml ]; then
-                        curl -X POST "${DEFECTDOJO_URL}/api/v2/import-scan/" -H "Authorization: Token \$DOJO_TOKEN" \
+                    [ -f zap-report.xml ] && curl -X POST "${DEFECTDOJO_URL}/api/v2/import-scan/" -H "Authorization: Token \$DOJO_TOKEN" \
                              -F "active=true" -F "scan_type=ZAP Scan" -F "product_name=HotelLux" \
-                             -F "engagement_name=CI/CD Build ${env.BUILD_NUMBER}" -F "file=@zap-report.xml"
-                    fi
-
-                    curl -X POST "${DEFECTDOJO_URL}/api/v2/import-scan/" -H "Authorization: Token \$DOJO_TOKEN" \
-                         -F "active=true" -F "scan_type=SonarQube API Import" -F "product_name=HotelLux" \
-                         -F "engagement_name=CI/CD Build ${env.BUILD_NUMBER}"
+                             -F "engagement_name=K8s Build ${env.BUILD_NUMBER}" -F "file=@zap-report.xml"
                     """
                 }
             }
@@ -199,7 +187,7 @@ pipeline {
             cleanWs() 
             sh 'docker image prune -f' 
         }
-        success { echo "SUCCESS: HotelLux Kubernetes Build #${env.BUILD_NUMBER} Finished!" }
+        success { echo "SUCCESS: HotelLux K8s Build #${env.BUILD_NUMBER} Deployed to 18.215.15.53" }
         failure { echo "FAILURE: Build #${env.BUILD_NUMBER} failed." }
     }
 }
