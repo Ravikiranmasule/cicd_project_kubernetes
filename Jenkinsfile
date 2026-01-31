@@ -86,7 +86,6 @@ pipeline {
                 script {
                     def dpCheckHome = tool 'DP-Check'
                     withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_KEY')]) {
-                        // FIX: Removed unrecognized '--nodeAuditSkipExit' and added '--disableYarnAudit'
                         sh """
                         ${dpCheckHome}/bin/dependency-check.sh --project HotelLux \
                         --scan . --format ALL --out . \
@@ -144,7 +143,6 @@ pipeline {
                          -F "active=true" -F "scan_type=Trivy Scan" -F "product_name=HotelLux" \
                          -F "engagement_name=CI/CD Build ${env.BUILD_NUMBER}" -F "file=@trivy-report.json"
 
-                    # FIX: Added check to prevent Exit Code 26 if file is missing
                     if [ -f dependency-check-report.xml ]; then
                         curl -X POST "${DEFECTDOJO_URL}/api/v2/import-scan/" -H "Authorization: Token \$DOJO_TOKEN" \
                              -F "active=true" -F "scan_type=Dependency Check Scan" -F "product_name=HotelLux" \
@@ -157,12 +155,19 @@ pipeline {
             }
         }
 
-        stage('11. Docker Deploy') {
+        stage('11. Kubernetes Deploy') {
             steps {
-                sh 'docker rm -f prometheus || true' 
-                sh 'docker-compose down --remove-orphans || true'
-                sh 'docker-compose up -d --build'
-                sh 'sleep 30' 
+                // Use the 'Secret File' ID you created in Jenkins Master
+                withKubeConfig([credentialsId: 'k3s-config']) {
+                    sh """
+                    # Apply all YAML files in your k8s folder
+                    kubectl apply -f k8s/
+                    
+                    # Force the cluster to pull the 'latest' images you just pushed to DockerHub
+                    kubectl rollout restart deployment hotellux-backend
+                    kubectl rollout restart deployment hotellux-frontend
+                    """
+                }
             }
         }
 
@@ -170,6 +175,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'defectdojo-token', variable: 'DOJO_TOKEN')]) {
                     sh """
+                    # Update this URL to point to your Kubernetes Ingress or LoadBalancer if needed
                     docker run --user root --network hotellux-app-build_hotel-network --rm -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
                         -t ${APP_URL} -x zap-report.xml || true
                     
@@ -193,7 +199,7 @@ pipeline {
             cleanWs() 
             sh 'docker image prune -f' 
         }
-        success { echo "SUCCESS: HotelLux DevSecOps Build #${env.BUILD_NUMBER} Finished!" }
+        success { echo "SUCCESS: HotelLux Kubernetes Build #${env.BUILD_NUMBER} Finished!" }
         failure { echo "FAILURE: Build #${env.BUILD_NUMBER} failed." }
     }
 }
