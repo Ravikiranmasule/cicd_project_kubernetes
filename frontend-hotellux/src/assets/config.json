@@ -1,5 +1,5 @@
 {
-  "apiBaseUrl": "http://52.200.182.38:9191/api",
+  "apiBaseUrl": "http://18.215.15.53:30001/api",
   "endpoints": {
     "users": "/users",
     "staff": "/staff",
