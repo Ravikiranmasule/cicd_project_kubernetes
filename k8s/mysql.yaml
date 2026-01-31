@@ -1,3 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi # Reserves disk space on your worker node
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,11 +31,18 @@ spec:
           value: "usermanagementmodule"
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql # Maps the DB data folder to the PVC
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-db
+  name: mysql-db # This name MUST match DB_HOST in your application.properties
 spec:
   selector:
     app: mysql
