@@ -14,19 +14,26 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: ravikiranmasule/hotellux-k8s-frontend:v0
+        image: ravikiranmasule/hotellux-k8s-frontend:v13 # Updated by Jenkins
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: angular-frontend
 spec:
-  type: NodePort # This makes the frontend accessible from outside
+  type: NodePort
   selector:
     app: hotel-frontend
   ports:
     - port: 80
       targetPort: 80
-      nodePort: 30080 # Access via http://<Worker-IP>:30080
+      nodePort: 30080
