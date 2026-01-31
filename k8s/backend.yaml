@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: ravikiranmasule/hotellux-backend:latest
+        image: ravikiranmasule/hotellux-k8s-backend:v0
         ports:
         - containerPort: 9191
 ---
