@@ -12,11 +12,28 @@ spec:
       labels:
         app: hotel-backend
     spec:
+      # 1. INIT CONTAINER: Waits for MySQL to be ready before starting Java
+      initContainers:
+      - name: wait-for-db
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nslookup mysql-db; do echo waiting for mysql; sleep 2; done;']
+      
       containers:
       - name: backend
-        image: ravikiranmasule/hotellux-k8s-backend:v0
+        # Your Jenkins pipeline will dynamically update this tag
+        image: ravikiranmasule/hotellux-k8s-backend:v13
         ports:
         - containerPort: 9191
+        # 2. ENVIRONMENT VARIABLES: Injects the values into application.properties
+        env:
+        - name: DB_HOST
+          value: "mysql-db" # Must match the Service name in mysql.yaml
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: "Ravikiran@123"
+        - name: JWT_SECRET
+          value: "your-secret-key"
 ---
 apiVersion: v1
 kind: Service
@@ -29,4 +46,4 @@ spec:
   ports:
     - port: 9191
       targetPort: 9191
-      nodePort: 30001 # This matches the config.json port
+      nodePort: 30001
