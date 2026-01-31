@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotellux-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel-frontend
+  template:
+    metadata:
+      labels:
+        app: hotel-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: ravikiranmasule/hotellux-frontend:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular-frontend
+spec:
+  type: NodePort # This makes the frontend accessible from outside
+  selector:
+    app: hotel-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080 # Access via http://<Worker-IP>:30080
